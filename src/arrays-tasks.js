@@ -307,7 +307,9 @@ function selectMany(/* arr, childrenSelector */) {
  *   calculateBalance([]) => 0
  */
 function calculateBalance(arr) {
-  throw new Error('Not implemented');
+  if (!Array.isArray(arr)) {
+    throw new Error('Input must be an array');
+  }
   if (arr.length === 0) {
     return 0;
   }
@@ -329,8 +331,24 @@ function calculateBalance(arr) {
  *    createChunks(['a', 'b', 'c', 'd', 'e'], 2) => [['a', 'b'], ['c', 'd'], ['e']]
  *    createChunks([10, 20, 30, 40, 50], 1) => [[10], [20], [30], [40], [50]]
  */
-function createChunks(/* arr, chunkSize */) {
-  throw new Error('Not implemented');
+function createChunks(arr, chunkSize) {
+  if (!Array.isArray(arr)) {
+    throw new Error('The first argument must be an array');
+  }
+
+  if (typeof chunkSize !== 'number' || chunkSize <= 0) {
+    throw new Error('The chunk size must be a positive number');
+  }
+
+  return arr.reduce((result, item, index) => {
+    const chunkIndex = Math.floor(index / chunkSize);
+    const newResult = [...result];
+    if (!newResult[chunkIndex]) {
+      newResult[chunkIndex] = [];
+    }
+    newResult[chunkIndex].push(item);
+    return newResult;
+  }, []);
 }
 
 /**
