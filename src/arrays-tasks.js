@@ -522,20 +522,18 @@ function findCommonElements(arr1, arr2) {
  *    findLongestIncreasingSubsequence([3, 10, 2, 1, 20]) => 2
  *    findLongestIncreasingSubsequence([50, 3, 10, 7, 40, 80]) => 3
  */
-function findLongestIncreasingSubsequence(arr) {
-  if (arr.length === 0) return 0;
+function findLongestIncreasingSubsequence(nums) {
+  if (nums.length === 0) return 0;
 
-  const lis = Array(arr.length).fill(1);
-
-  for (let i = 1; i < arr.length; i += i) {
-    for (let j = 0; j < i; j += j) {
-      if (arr[i] > arr[j]) {
-        lis[i] = Math.max(lis[i], lis[j] + 1);
-      }
+  return nums.reduce((acc, num) => {
+    const prev = acc.slice(-1)[0]; // Последний элемент текущей последовательности
+    if (acc.length === 0 || num > prev) {
+      acc.push(num);
+    } else {
+      acc[acc.findIndex((el) => el >= num)] = num;
     }
-  }
-
-  return Math.max(...lis);
+    return acc;
+  }, []).length;
 }
 
 /**
@@ -573,15 +571,9 @@ function propagateItemsByPositionIndex(arr) {
  *    shiftArray([10, 20, 30, 40, 50], -3) => [40, 50, 10, 20, 30]
  */
 function shiftArray(arr, n) {
-  const shift = n % arr.length;
-
-  if (shift > 0) {
-    return arr.slice(-shift).concat(arr.slice(0, arr.length - shift));
-  }
-  if (shift < 0) {
-    return arr.slice(-shift).concat(arr.slice(0, arr.length + shift));
-  }
-  return arr;
+  if (!arr.length) return [];
+  const shift = ((n % arr.length) + arr.length) % arr.length;
+  return arr.slice(-shift).concat(arr.slice(0, -shift));
 }
 
 /**
